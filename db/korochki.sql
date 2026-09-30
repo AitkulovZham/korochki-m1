@@ -1,5 +1,6 @@
 -- korochki.sql — схема БД учебного проекта «Корочки.есть» (ПМ.09), вариант 1: онлайн-курсы ДПО.
 -- Импорт: mysql -u root < db/korochki.sql   (или phpMyAdmin → Импорт)
+-- Индексы под целевые запросы — в разделе «Индексы» (см. также db/indexes.sql и db/drop_indexes.sql).
 
 CREATE DATABASE IF NOT EXISTS korochki CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE korochki;
@@ -57,6 +58,11 @@ CREATE TABLE applications (
   status_id         TINYINT UNSIGNED NOT NULL DEFAULT 1,
   created_at        TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
+
+-- Индексы
+CREATE INDEX idx_courses_category_active ON courses (category_id, is_active);
+CREATE INDEX idx_apps_user_created       ON applications (user_id, created_at);
+CREATE INDEX idx_apps_status_created     ON applications (status_id, created_at);
 
 -- Справочники
 INSERT INTO roles (id, name) VALUES (1,'admin'),(2,'operator'),(3,'user');
