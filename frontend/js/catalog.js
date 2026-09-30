@@ -1,10 +1,12 @@
 "use strict";
 
-/* Каталог курсов: постраничная подгрузка и lazy-load карточек через IntersectionObserver. */
+/* Каталог курсов: фильтр по направлению, постраничная подгрузка и lazy-load карточек
+   через IntersectionObserver, отмена устаревших запросов (AbortController). */
 document.addEventListener("DOMContentLoaded", () => {
   const PER_PAGE = 12;
   const cards = document.getElementById("cards");
   const statusLine = document.getElementById("status");
+  const select = document.getElementById("category");
   const sentinel = document.getElementById("sentinel");
   const state = { page: 0, hasNext: true, loading: false, total: 0, shown: 0, controller: null };
 
@@ -44,6 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
     state.controller = controller;
     try {
       const params = new URLSearchParams({ page: state.page + 1, per_page: PER_PAGE });
+      if (select.value) params.set("category_id", select.value);
       const data = await App.api("/api/catalog?" + params, { signal: controller.signal });
       data.items.forEach((course) => cards.append(buildCard(course)));
       state.page = data.page;
@@ -67,10 +70,22 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  function resetAndLoad() {
+    if (state.controller) state.controller.abort();
+    Object.assign(state, { page: 0, hasNext: true, loading: false, total: 0, shown: 0 });
+    cards.replaceChildren();
+    loadNextPage();
+  }
+
   /* Подгрузка следующей страницы, когда до конца списка остаётся ~300px */
   const sentinelObserver = new IntersectionObserver((entries) => {
     if (entries[0].isIntersecting) loadNextPage();
   }, { rootMargin: "300px" });
   sentinelObserver.observe(sentinel);
 
+  select.addEventListener("change", resetAndLoad);
+
+  App.api("/api/categories").then((list) => {
+    list.forEach((c) => select.append(App.el("option", { value: c.id, text: c.name })));
+  }).catch(() => { /* фильтр останется «Все направления» */ });
 });
