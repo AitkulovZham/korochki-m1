@@ -1,0 +1,111 @@
+/* Корочки.есть — стили. Mobile-first: базовые стили для 320px, затем @media (min-width) */
+:root {
+  --bg: #f5f7fb;
+  --surface: #ffffff;
+  --text: #1a2233;
+  --muted: #4a5568;
+  --accent: #1d4ed8;
+  --accent-dark: #1e3a8a;
+  --border: #cbd5e1;
+  --danger: #b42318;
+  --ok: #067647;
+  --radius: 10px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { font-size: 100%; }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--bg);
+}
+img { max-width: 100%; height: auto; display: block; }
+a { color: var(--accent); }
+
+:focus-visible { outline: 2px solid var(--accent-dark); outline-offset: 2px; }
+
+.skip-link {
+  position: absolute; left: 0.5rem; top: -4rem; z-index: 10;
+  background: var(--accent-dark); color: #fff; padding: 0.5rem 0.75rem; border-radius: 6px;
+}
+.skip-link:focus { top: 0.5rem; }
+
+.container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+
+header.site { background: var(--surface); border-bottom: 1px solid var(--border); }
+header.site .container { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; padding-top: 0.75rem; padding-bottom: 0.75rem; }
+.brand { font-weight: 700; font-size: 1.15rem; color: var(--accent-dark); text-decoration: none; }
+nav ul { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; list-style: none; margin: 0; padding: 0; }
+nav a { display: inline-block; padding: 0.35rem 0.25rem; }
+
+main { padding: 1.25rem 0 2.5rem; min-height: 60vh; }
+footer.site { border-top: 1px solid var(--border); padding: 1rem 0; color: var(--muted); font-size: 0.9rem; }
+
+h1 { font-size: clamp(1.5rem, 4vw + 1rem, 3rem); line-height: 1.15; margin: 0 0 0.5rem; }
+h2 { font-size: 1.25rem; margin: 1.25rem 0 0.5rem; }
+.lead { color: var(--muted); margin: 0 0 1rem; max-width: 60ch; }
+
+/* Форма и поля */
+.field { display: flex; flex-direction: column; gap: 0.25rem; margin-bottom: 1rem; }
+label { font-weight: 600; }
+input, select, button { font: inherit; }
+input, select {
+  padding: 0.6rem 0.75rem; border: 1px solid var(--muted); border-radius: 8px; background: #fff; color: var(--text); min-height: 44px;
+}
+small { color: var(--muted); }
+button, .btn {
+  display: inline-block; padding: 0.6rem 1.1rem; min-height: 44px; border: 0; border-radius: 8px;
+  background: var(--accent); color: #fff; font-weight: 600; text-decoration: none; cursor: pointer; text-align: center;
+}
+button:hover, .btn:hover { background: var(--accent-dark); }
+button:disabled { background: #94a3b8; color: #0f172a; cursor: not-allowed; }
+.btn-secondary { background: #e2e8f0; color: var(--text); }
+.btn-secondary:hover { background: #cbd5e1; }
+form.card-form { max-width: 28rem; background: var(--surface); padding: 1.25rem; border: 1px solid var(--border); border-radius: var(--radius); }
+
+.alert { padding: 0.6rem 0.8rem; border-radius: 8px; margin: 0.75rem 0; }
+.alert.error { background: #fef3f2; color: var(--danger); border: 1px solid #fda29b; }
+.alert.ok { background: #ecfdf3; color: var(--ok); border: 1px solid #75e0a7; }
+
+/* Панель фильтра */
+.toolbar { display: flex; flex-wrap: wrap; align-items: end; gap: 0.75rem 1rem; margin-bottom: 1rem; }
+.toolbar .field { margin: 0; min-width: 14rem; }
+
+/* Каталог: mobile-first сетка — 1 колонка → 2 колонки → auto-fill minmax(280px, 1fr) */
+.cards { display: block; }
+.course-card { margin-bottom: 1rem; }
+
+.course-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.course-card.is-visible { opacity: 1; transform: none; }
+.course-card img { width: 100%; object-fit: cover; background: #e2e8f0; }
+.course-card .body { padding: 0.9rem 1rem 1rem; display: flex; flex-direction: column; gap: 0.35rem; flex: 1; }
+.course-card h3 { margin: 0; font-size: 1.05rem; }
+.course-card .meta { color: var(--muted); font-size: 0.92rem; }
+.course-card .price { font-weight: 700; margin-top: auto; }
+.course-card .btn { margin-top: 0.5rem; }
+
+#sentinel { height: 1px; }
+.status-line { color: var(--muted); margin: 0.75rem 0; min-height: 1.5rem; }
+.loading::after { content: " …"; }
+@media (prefers-reduced-motion: reduce) {
+  .course-card { transition: none; opacity: 1; transform: none; }
+}
+
+/* Таблицы: прокрутка внутри контейнера, страница не ломается */
+.table-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+table { width: 100%; border-collapse: collapse; min-width: 34rem; }
+th, td { text-align: left; padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--border); }
+th { background: #eef2f7; }
+.badge { display: inline-block; padding: 0.1rem 0.6rem; border-radius: 999px; background: #e2e8f0; font-size: 0.85rem; }
+.badge.s1 { background: #dbeafe; color: #1e3a8a; }
+.badge.s2 { background: #fef3c7; color: #78350f; }
+.badge.s3 { background: #d1fae5; color: #065f46; }
+.badge.s4 { background: #fee2e2; color: #7f1d1d; }
+.pager { display: flex; gap: 0.5rem; align-items: center; margin-top: 0.75rem; }
+
+@media (min-width: 1440px) { .container { max-width: 1320px; } }

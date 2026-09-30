@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Корочки.есть — онлайн-курсы дополнительного профессионального образования: каталог, запись на обучение, личный кабинет.">
+  <title>Панель оператора — Корочки.есть</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/js/common.js"></script>
+  <script src="/js/admin.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Перейти к содержимому</a>
+  <header class="site">
+    <div class="container">
+      <a class="brand" href="/">Корочки.есть</a>
+      <nav aria-label="Главное меню"><ul id="nav"></ul></nav>
+    </div>
+  </header>
+  <main id="main" class="container">
+    <h1>Панель оператора</h1>
+    <div class="toolbar">
+      <div class="field">
+        <label for="status-filter">Статус заявки</label>
+        <select id="status-filter">
+          <option value="">Все</option><option value="1">Новая</option><option value="2">В обработке</option>
+          <option value="3">Подтверждена</option><option value="4">Отклонена</option>
+        </select>
+      </div>
+    </div>
+    <p id="message" role="alert" class="alert error" hidden></p>
+    <p id="status" class="status-line" role="status" aria-live="polite"></p>
+    <div class="table-wrap">
+      <table aria-label="Все заявки">
+        <thead><tr><th scope="col">№</th><th scope="col">Пользователь</th><th scope="col">Курс</th><th scope="col">Дата начала</th><th scope="col">Статус</th><th scope="col">Изменить</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <div class="pager">
+      <button type="button" id="prev" class="btn-secondary" disabled>Назад</button>
+      <span id="page-label">Страница 1</span>
+      <button type="button" id="next" class="btn-secondary" disabled>Вперёд</button>
+    </div>
+  </main>
+  <footer class="site"><div class="container">© 2026 Корочки.есть — учебный проект ПМ.09</div></footer>
+</body>
+</html>

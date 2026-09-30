@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Корочки.есть — онлайн-курсы дополнительного профессионального образования: каталог, запись на обучение, личный кабинет.">
+  <title>Регистрация — Корочки.есть</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/js/common.js"></script>
+  <script src="/js/auth.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Перейти к содержимому</a>
+  <header class="site">
+    <div class="container">
+      <a class="brand" href="/">Корочки.есть</a>
+      <nav aria-label="Главное меню"><ul id="nav"></ul></nav>
+    </div>
+  </header>
+  <main id="main" class="container">
+    <h1>Регистрация</h1>
+    <form id="register-form" class="card-form" novalidate>
+      <div class="field">
+        <label for="login">Логин</label>
+        <input id="login" name="login" type="text" required minlength="6" maxlength="50" autocomplete="username" aria-describedby="login-help">
+        <small id="login-help">6–50 символов: латиница, цифры, _ . -</small>
+      </div>
+      <div class="field">
+        <label for="password">Пароль</label>
+        <input id="password" name="password" type="password" required minlength="8" autocomplete="new-password" aria-describedby="pwd-help">
+        <small id="pwd-help">Не менее 8 символов</small>
+      </div>
+      <div class="field">
+        <label for="password2">Повторите пароль</label>
+        <input id="password2" name="password2" type="password" required minlength="8" autocomplete="new-password">
+      </div>
+      <button type="submit">Зарегистрироваться</button>
+      <p role="alert" id="error" class="alert error" hidden></p>
+      <p><a href="/login">Уже есть аккаунт? Войти</a></p>
+    </form>
+  </main>
+  <footer class="site"><div class="container">© 2026 Корочки.есть — учебный проект ПМ.09</div></footer>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Корочки.есть — онлайн-курсы дополнительного профессионального образования: каталог, запись на обучение, личный кабинет.">
+  <title>Запись на курс — Корочки.есть</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/js/common.js"></script>
+  <script src="/js/create_application.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Перейти к содержимому</a>
+  <header class="site">
+    <div class="container">
+      <a class="brand" href="/">Корочки.есть</a>
+      <nav aria-label="Главное меню"><ul id="nav"></ul></nav>
+    </div>
+  </header>
+  <main id="main" class="container">
+    <h1>Запись на курс</h1>
+    <form id="app-form" class="card-form" novalidate>
+      <div class="field">
+        <label for="category">Направление</label>
+        <select id="category" required><option value="">Выберите направление</option></select>
+      </div>
+      <div class="field">
+        <label for="course">Курс</label>
+        <select id="course" required disabled><option value="">Сначала выберите направление</option></select>
+      </div>
+      <div class="field">
+        <label for="start_date">Дата начала</label>
+        <input id="start_date" name="start_date" type="date" required>
+      </div>
+      <div class="field">
+        <label for="payment">Способ оплаты</label>
+        <select id="payment" required><option value="">Выберите способ оплаты</option></select>
+      </div>
+      <button type="submit" id="submit">Отправить заявку</button>
+      <p role="alert" id="error" class="alert error" hidden></p>
+      <p role="status" id="ok" class="alert ok" hidden></p>
+    </form>
+  </main>
+  <footer class="site"><div class="container">© 2026 Корочки.есть — учебный проект ПМ.09</div></footer>
+</body>
+</html>
