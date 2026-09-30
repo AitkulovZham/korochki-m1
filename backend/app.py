@@ -192,11 +192,11 @@ def catalog():
     total = db_fetch_one(f"SELECT COUNT(*) AS n FROM courses WHERE {where}", params)["n"]
     items = db_fetch_all(
         f"SELECT id, name, category_id, hours, price FROM courses WHERE {where} "
-        "ORDER BY id",
-        params,
+        "ORDER BY id LIMIT %s OFFSET %s",
+        params + [per_page, (page - 1) * per_page],
     )
     return jsonify(items=items, page=page, per_page=per_page, total=total,
-                   has_next=False)
+                   has_next=page * per_page < total)
 
 
 @app.get("/api/catalog/<int:course_id>")
@@ -252,8 +252,8 @@ def my_applications():
     items = db_fetch_all(
         "SELECT a.id, c.name AS course_name, a.start_date, a.status_id "
         "FROM applications a JOIN courses c ON c.id = a.course_id "
-        "WHERE a.user_id = %s ORDER BY a.created_at DESC, a.id DESC",
-        (current_user_id(),),
+        "WHERE a.user_id = %s ORDER BY a.created_at DESC, a.id DESC LIMIT %s OFFSET %s",
+        (current_user_id(), per_page, (page - 1) * per_page),
     )
     return jsonify(items=items, page=page, per_page=per_page)
 
@@ -286,8 +286,8 @@ def admin_applications():
     items = db_fetch_all(
         "SELECT a.id, u.login, c.name AS course_name, a.start_date, a.status_id, a.created_at "
         "FROM applications a JOIN users u ON u.id = a.user_id JOIN courses c ON c.id = a.course_id "
-        f"WHERE {where} ORDER BY a.created_at DESC, a.id DESC",
-        params,
+        f"WHERE {where} ORDER BY a.created_at DESC, a.id DESC LIMIT %s OFFSET %s",
+        params + [per_page, (page - 1) * per_page],
     )
     return jsonify(items=items, page=page, per_page=per_page)
 
