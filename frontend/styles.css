@@ -81,9 +81,11 @@ form.card-form { max-width: 28rem; background: var(--surface); padding: 1.25rem;
 .course-card {
   background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;
   display: flex; flex-direction: column;
+  opacity: 0; transform: translateY(8px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 .course-card.is-visible { opacity: 1; transform: none; }
-.course-card img { width: 100%; object-fit: cover; background: #e2e8f0; }
+.course-card img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: #e2e8f0; }
 .course-card .body { padding: 0.9rem 1rem 1rem; display: flex; flex-direction: column; gap: 0.35rem; flex: 1; }
 .course-card h3 { margin: 0; font-size: 1.05rem; }
 .course-card .meta { color: var(--muted); font-size: 0.92rem; }
