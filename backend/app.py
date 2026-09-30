@@ -7,6 +7,8 @@ from functools import wraps
 
 import pymysql
 from flask import Flask, jsonify, request, send_from_directory
+from flask_caching import Cache
+from flask_compress import Compress
 from flask_cors import CORS
 from itsdangerous import BadSignature, URLSafeTimedSerializer
 
@@ -23,6 +25,9 @@ app = Flask(__name__, static_folder=None)
 app.config["SECRET_KEY"] = os.environ.get("KOROCHKI_SECRET", "dev-secret-change-me")
 app.json.ensure_ascii = False
 CORS(app)
+Compress(app)
+cache = Cache(config={"CACHE_TYPE": "SimpleCache", "CACHE_DEFAULT_TIMEOUT": 300})
+cache.init_app(app)
 serializer = URLSafeTimedSerializer(app.config["SECRET_KEY"], salt="korochki-auth")
 
 DB_CONFIG = {
@@ -154,11 +159,13 @@ def login():
 
 # ---------- справочники (кэшируются) ----------
 @app.get("/api/categories")
+@cache.cached(timeout=600)
 def categories():
     return jsonify(db_fetch_all("SELECT id, name FROM categories ORDER BY name"))
 
 
 @app.get("/api/payment_methods")
+@cache.cached(timeout=600)
 def payment_methods():
     return jsonify(db_fetch_all("SELECT id, name FROM payment_methods ORDER BY id"))
 
@@ -173,11 +180,13 @@ def admin_create_payment_method():
         new_id, _ = db_execute("INSERT INTO payment_methods (name) VALUES (%s)", (name,))
     except pymysql.err.IntegrityError:
         return error("Такой способ оплаты уже есть", 409)
+    cache.delete("view//api/payment_methods")
     return jsonify(success=True, id=new_id)
 
 
 # ---------- каталог курсов (вариант 1): фильтр по направлению + пагинация ----------
 @app.get("/api/catalog")
+@cache.cached(timeout=120, query_string=True)
 def catalog():
     page, per_page = page_params(default_per_page=12)
     if page is None:
@@ -215,6 +224,7 @@ def admin_toggle_course(course_id):
     _, rows = db_execute("UPDATE courses SET is_active = %s WHERE id = %s", (int(is_active), course_id))
     if rows == 0 and db_fetch_one("SELECT id FROM courses WHERE id = %s", (course_id,)) is None:
         return error("Курс не найден", 404)
+    cache.clear()  # каталог кэшируется по query string — сбрасываем целиком
     return jsonify(success=True)
 
 
@@ -323,6 +333,13 @@ def page():
 @app.get("/<path:filename>")
 def static_files(filename):
     return send_from_directory(FRONTEND_DIR, filename)
+
+
+@app.after_request
+def cache_headers(response):
+    if request.path.endswith((".css", ".js", ".svg", ".webp", ".png")):
+        response.headers["Cache-Control"] = "public, max-age=86400"
+    return response
 
 
 @app.errorhandler(404)
